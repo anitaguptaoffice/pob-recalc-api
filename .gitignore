@@ -4,3 +4,19 @@ pob-api
 pob-mcp/
 poexport/
 poexport-extension/
+
+# cn-poe-utils: only track go/ and data/db/ (already committed)
+# ignore the rest (TS source, npm, export data, etc.)
+cn-poe-utils/.editorconfig
+cn-poe-utils/.gitattributes
+cn-poe-utils/.gitignore
+cn-poe-utils/.prettierrc
+cn-poe-utils/README.md
+cn-poe-utils/eslint.config.mjs
+cn-poe-utils/package.json
+cn-poe-utils/pnpm-lock.yaml
+cn-poe-utils/tsconfig.json
+cn-poe-utils/src/
+cn-poe-utils/data/.gitattributes
+cn-poe-utils/data/README.md
+cn-poe-utils/data/export/
