@@ -1,0 +1,42 @@
+[
+  {
+    "id": "QualityPrefix",
+    "zh": "精良的 ",
+    "en": "Superior ",
+    "ref": "ClientStrings,Id,Text",
+    "key": "QualityItem",
+    "type": "Prefix"
+  },
+  {
+    "id": "SynthesisedPrefix",
+    "zh": "忆境 ",
+    "en": "Synthesised ",
+    "ref": "ClientStrings,Id,Text",
+    "key": "SynthesisedItem",
+    "type": "Prefix"
+  },
+  {
+    "id": "MutatedUniqueNamePrefix",
+    "zh": "秽生",
+    "en": "Foulborn ",
+    "ref": "ClientStrings,Id,Text",
+    "key": "MutatedUniqueName",
+    "type": "Prefix"
+  },
+  {
+    "id": "InfluenceStatPrefix1",
+    "zh": "有一个传奇怪物出现在你面前：",
+    "en": "While a Unique Enemy is in your Presence, ",
+    "ref": "ClientStrings,Id,Text",
+    "key": "InfluenceStatConditionPresenceUniqueMonster",
+    "type": "Prefix"
+  },
+  {
+    "id": "InfluenceStatPrefix2",
+    "zh": "有一个异界图鉴最终首领出现在你面前：",
+    "en": "While a Pinnacle Atlas Boss is in your Presence, ",
+    "ref": "ClientStrings,Id,Text",
+    "key": "InfluenceStatConditionPresenceCelestialBoss",
+    "type": "Prefix"
+  }
+]

@@ -1,0 +1,282 @@
+[
+  {
+    "zh": "{1} 秒内回复 {0} 生命",
+    "en": "Recovers {0} Life over {1} Seconds",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayFlaskLifeRecoveryNSeconds"
+  },
+  {
+    "zh": "{1} 秒内回复 {0} (augmented) 生命",
+    "en": "Recovers {0} (augmented) Life over {1} Seconds"
+  },
+  {
+    "zh": "{1} 秒内回复 {0} 魔力",
+    "en": "Recovers {0} Mana over {1} Seconds",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayFlaskManaRecoveryNSeconds"
+  },
+  {
+    "zh": "{1} 秒内回复 {0} (augmented) 魔力",
+    "en": "Recovers {0} (augmented) Mana over {1} Seconds"
+  },
+  {
+    "zh": "每次使用会从 {1} 充能次数中消耗 {0} 次",
+    "en": "Consumes {0} of {1} Charges on use",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayChargesConsumptionOnUseNCharges"
+  },
+  {
+    "zh": "每次使用会从 {1} 充能次数中消耗 {0} (augmented) 次",
+    "en": "Consumes {0} (augmented) of {1} Charges on use"
+  },
+  {
+    "zh": "目前有 {0} 充能次数",
+    "en": "Currently has {0} Charges",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayChargesNCharges"
+  },
+  {
+    "zh": "持续 {0} 秒",
+    "en": "Lasts {0} Seconds",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayFlaskBuffDurationNSeconds"
+  },
+  {
+    "zh": "持续 {0} (augmented) 秒",
+    "en": "Lasts {0} (augmented) Seconds"
+  },
+  {
+    "zh": "每 {0} 秒造成魔力燃烧",
+    "en": "Inflicts Mana Burn every {0} Second",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayTinctureToxicity1Second"
+  },
+  {
+    "zh": "失效后冷却时间 {0} 秒",
+    "en": "{0} Second Cooldown when Deactivated",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayTinctureCooldownNSeconds"
+  },
+  {
+    "zh": "物理伤害",
+    "en": "Physical Damage",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayWeaponPhysicalDamage"
+  },
+  {
+    "zh": "混沌伤害",
+    "en": "Chaos Damage",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayWeaponChaosDamage"
+  },
+  {
+    "zh": "能量护盾",
+    "en": "Energy Shield",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayArmourEnergyShield"
+  },
+  {
+    "zh": "武器范围：{0} 米",
+    "en": "Weapon Range: {0} metres",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayWeaponRange"
+  },
+  {
+    "zh": "武器范围：{0} (augmented) 米",
+    "en": "Weapon Range: {0} (augmented) metres"
+  },
+  {
+    "zh": "闪避值",
+    "en": "Evasion Rating",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayArmourEvasionRating"
+  },
+  {
+    "zh": "结界",
+    "en": "Ward",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayArmourWard"
+  },
+  {
+    "zh": "火焰，冰霜，闪电伤害",
+    "en": "Elemental Damage",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayWeaponElementalDamage"
+  },
+  {
+    "zh": "攻击暴击率",
+    "en": "Critical Strike Chance",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayWeaponCriticalStrikeChance"
+  },
+  {
+    "zh": "每秒攻击次数",
+    "en": "Attacks per Second",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayWeaponAttacksPerSecond"
+  },
+  {
+    "zh": "护甲",
+    "en": "Armour",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayArmourArmour"
+  },
+  {
+    "zh": "深渊",
+    "en": "Abyss",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayAbyssalJewel"
+  },
+  {
+    "zh": "格挡几率",
+    "en": "Chance to Block",
+    "ref": "ClientStrings,Id,Text",
+    "key": "ItemDisplayShieldBlockChance"
+  },
+  {
+    "zh": "范围",
+    "en": "Radius",
+    "values": [
+      {
+        "zh": "变量",
+        "en": "Variable",
+        "ref": "ClientStrings,Id,Text",
+        "key": "JewelRadiusVariable"
+      },
+      {
+        "zh": "变量 (augmented)",
+        "en": "Variable (augmented)"
+      },
+      {
+        "zh": "小",
+        "en": "Small",
+        "ref": "ClientStrings,Id,Text",
+        "key": "JewelRadiusSmall"
+      },
+      {
+        "zh": "中",
+        "en": "Medium",
+        "ref": "ClientStrings,Id,Text",
+        "key": "JewelRadiusMedium"
+      },
+      {
+        "zh": "大",
+        "en": "Large",
+        "ref": "ClientStrings,Id,Text",
+        "key": "JewelRadiusLarge"
+      }
+    ],
+    "ref": "ClientStrings,Id,Text",
+    "key": "JewelRadiusLabel"
+  },
+  {
+    "zh": "仅限",
+    "en": "Limited to",
+    "values": [
+      {
+        "zh": "1 史实",
+        "en": "1 Historic",
+        "ref": "ClientStrings,Id,Text",
+        "key": "HistoricJewelLimit"
+      }
+    ],
+    "ref": "ClientStrings,Id,Text",
+    "key": "JewelItemLimit"
+  },
+  {
+    "zh": "弓",
+    "en": "Bow",
+    "ref": "ClientStrings,Id,Text",
+    "key": "WeaponClassDisplayNameBow"
+  },
+  {
+    "zh": "战杖",
+    "en": "Warstaff",
+    "ref": "ClientStrings,Id,Text",
+    "key": "WeaponClassDisplayNameWarstaff"
+  },
+  {
+    "zh": "单手剑",
+    "en": "One Handed Sword",
+    "ref": "ClientStrings,Id,Text",
+    "key": "WeaponClassDisplayNameOneHandedSword"
+  },
+  {
+    "zh": "符文匕首",
+    "en": "Rune Dagger",
+    "ref": "ClientStrings,Id,Text",
+    "key": "WeaponClassDisplayNameRuneDagger"
+  },
+  {
+    "zh": "法杖",
+    "en": "Wand",
+    "ref": "ClientStrings,Id,Text",
+    "key": "WeaponClassDisplayNameWand"
+  },
+  {
+    "zh": "匕首",
+    "en": "Dagger",
+    "ref": "ClientStrings,Id,Text",
+    "key": "WeaponClassDisplayNameDagger"
+  },
+  {
+    "zh": "短杖",
+    "en": "Sceptre",
+    "ref": "ClientStrings,Id,Text",
+    "key": "WeaponClassDisplayNameSceptre"
+  },
+  {
+    "zh": "爪",
+    "en": "Claw",
+    "ref": "ClientStrings,Id,Text",
+    "key": "WeaponClassDisplayNameClaw"
+  },
+  {
+    "zh": "单手锤",
+    "en": "One Handed Mace",
+    "ref": "ClientStrings,Id,Text",
+    "key": "WeaponClassDisplayNameOneHandedMace"
+  },
+  {
+    "zh": "单手斧",
+    "en": "One Handed Axe",
+    "ref": "ClientStrings,Id,Text",
+    "key": "WeaponClassDisplayNameOneHandedAxe"
+  },
+  {
+    "zh": "鱼竿",
+    "en": "Fishing Rod",
+    "ref": "ClientStrings,Id,Text",
+    "key": "WeaponClassDisplayNameFishingRod"
+  },
+  {
+    "zh": "长杖",
+    "en": "Staff",
+    "ref": "ClientStrings,Id,Text",
+    "key": "WeaponClassDisplayNameStaff"
+  },
+  {
+    "zh": "双手斧",
+    "en": "Two Handed Axe",
+    "ref": "ClientStrings,Id,Text",
+    "key": "WeaponClassDisplayNameTwoHandedAxe"
+  },
+  {
+    "zh": "双手剑",
+    "en": "Two Handed Sword",
+    "ref": "ClientStrings,Id,Text",
+    "key": "WeaponClassDisplayNameTwoHandedSword"
+  },
+  {
+    "zh": "双手锤",
+    "en": "Two Handed Mace",
+    "ref": "ClientStrings,Id,Text",
+    "key": "WeaponClassDisplayNameTwoHandedMace"
+  },
+  {
+    "zh": "品质",
+    "en": "Quality",
+    "ref": "ClientStrings,Id,Text",
+    "key": "Quality"
+  }
+]

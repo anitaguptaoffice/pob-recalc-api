@@ -1,0 +1,172 @@
+{"zh": "高阶多重投射", "en": "Greater Multiple Projectiles"}
+{"zh": "虚空操纵", "en": "Void Manipulation"}
+{"zh": "猛毒", "en": "Vile Toxins"}
+{"zh": "释出", "en": "Unleash"}
+{"zh": "异常爆发", "en": "Unbound Ailments"}
+{"zh": "陷阱冷却", "en": "Advanced Traps"}
+{"zh": "陷阱及地雷伤害", "en": "Trap and Mine Damage"}
+{"zh": "陷阱", "en": "Trap"}
+{"zh": "迅整", "en": "Swift Assembly"}
+{"zh": "召唤幻影", "en": "Summon Phantasm"}
+{"zh": "元素大军", "en": "Elemental Army"}
+{"zh": "击晕", "en": "Stun"}
+{"zh": "灌能吟唱", "en": "Infused Channelling"}
+{"zh": "先祖召唤", "en": "Ancestral Call"}
+{"zh": "法术图腾", "en": "Spell Totem"}
+{"zh": "法术凝聚", "en": "Intensify"}
+{"zh": "多重范围施法", "en": "Spell Cascade"}
+{"zh": "投射物减速", "en": "Slower Projectiles"}
+{"zh": "震波", "en": "Shockwave"}
+{"zh": "助力之风", "en": "Second Wind"}
+{"zh": "无情", "en": "Ruthless"}
+{"zh": "高爆地雷", "en": "High-Impact Mine"}
+{"zh": "链爆地雷", "en": "Blastchain Mine"}
+{"zh": "启迪", "en": "Inspiration"}
+{"zh": "持续时间缩短", "en": "Less Duration"}
+{"zh": "极速腐化", "en": "Swift Affliction"}
+{"zh": "弩炮图腾", "en": "Ballista Totem"}
+{"zh": "怒火", "en": "Rage"}
+{"zh": "粉碎", "en": "Pulverise"}
+{"zh": "暴击获得暴击球", "en": "Power Charge On Critical"}
+{"zh": "毒化", "en": "Critical Strike Affliction"}
+{"zh": "零点射击", "en": "Point Blank"}
+{"zh": "穿透", "en": "Pierce"}
+{"zh": "物理转闪电", "en": "Physical to Lightning"}
+{"zh": "邪恶投掷", "en": "Vicious Projectiles"}
+{"zh": "齐射", "en": "Volley"}
+{"zh": "动量", "en": "Momentum"}
+{"zh": "夜刃", "en": "Nightblade"}
+{"zh": "多重陷阱", "en": "Multiple Traps"}
+{"zh": "多重图腾", "en": "Multiple Totems"}
+{"zh": "多重打击", "en": "Multistrike"}
+{"zh": "施法回响", "en": "Spell Echo"}
+{"zh": "幻影射手", "en": "Mirage Archer"}
+{"zh": "地雷网", "en": "Minefield"}
+{"zh": "近战伤害扩散", "en": "Melee Splash"}
+{"zh": "近战物理伤害", "en": "Melee Physical Damage"}
+{"zh": "满血伤害", "en": "Damage on Full Life"}
+{"zh": "肉盾", "en": "Meat Shield"}
+{"zh": "魔力偷取", "en": "Mana Leech"}
+{"zh": "瘫痪", "en": "Maim"}
+{"zh": "闪电穿透", "en": "Lightning Penetration"}
+{"zh": "生命偷取", "en": "Life Leech"}
+{"zh": "击中生命回复", "en": "Life Gain on Hit"}
+{"zh": "低阶毒化", "en": "Chance to Poison"}
+{"zh": "多重投射", "en": "Multiple Projectiles"}
+{"zh": "击退", "en": "Knockback"}
+{"zh": "物品稀有度增幅", "en": "Item Rarity"}
+{"zh": "钢铁意志", "en": "Iron Will"}
+{"zh": "钢铁之握", "en": "Iron Grip"}
+{"zh": "闪电支配", "en": "Innervate"}
+{"zh": "炎军", "en": "Infernal Legion"}
+{"zh": "召唤生物速度", "en": "Minion Speed"}
+{"zh": "召唤生物生命", "en": "Minion Life"}
+{"zh": "召唤生物伤害", "en": "Minion Damage"}
+{"zh": "持续时间总增", "en": "More Duration"}
+{"zh": "提高暴击几率", "en": "Increased Critical Strikes"}
+{"zh": "提高暴击伤害", "en": "Increased Critical Damage"}
+{"zh": "增加燃烧伤害", "en": "Burning Damage"}
+{"zh": "增大范围", "en": "Increased Area of Effect"}
+{"zh": "穿刺", "en": "Impale"}
+{"zh": "献祭", "en": "Immolate"}
+{"zh": "点燃扩散", "en": "Ignite Proliferation"}
+{"zh": "霜咬", "en": "Ice Bite"}
+{"zh": "急冻", "en": "Hypothermia"}
+{"zh": "高阶齐射", "en": "Greater Volley"}
+{"zh": "武器元素伤害", "en": "Elemental Damage with Attacks"}
+{"zh": "和善", "en": "Generosity"}
+{"zh": "充能陷阱", "en": "Charged Traps"}
+{"zh": "护体", "en": "Fortify"}
+{"zh": "分裂", "en": "Fork"}
+{"zh": "几率逃跑", "en": "Chance to Flee"}
+{"zh": "火焰穿透", "en": "Fire Penetration"}
+{"zh": "狂噬", "en": "Feeding Frenzy"}
+{"zh": "快速投射", "en": "Faster Projectiles"}
+{"zh": "快速施法", "en": "Faster Casting"}
+{"zh": "快速攻击", "en": "Faster Attacks"}
+{"zh": "能量偷取", "en": "Energy Leech"}
+{"zh": "近战击晕获得耐力球", "en": "Endurance Charge on Melee Stun"}
+{"zh": "元素扩散", "en": "Elemental Proliferation"}
+{"zh": "元素集中", "en": "Elemental Focus"}
+{"zh": "效能", "en": "Efficacy"}
+{"zh": "腐蚀", "en": "Decay"}
+{"zh": "掠食", "en": "Predator"}
+{"zh": "致命异常状态", "en": "Deadly Ailments"}
+{"zh": "蛊咒", "en": "Hextouch"}
+{"zh": "终结", "en": "Culling Strike"}
+{"zh": "精准破坏", "en": "Controlled Destruction"}
+{"zh": "集中效应", "en": "Concentrated Effect"}
+{"zh": "寒冰转烈焰", "en": "Cold to Fire"}
+{"zh": "冰霜穿透", "en": "Cold Penetration"}
+{"zh": "散弹陷阱", "en": "Cluster Traps"}
+{"zh": "近战", "en": "Close Combat"}
+{"zh": "充能地雷", "en": "Charged Mines"}
+{"zh": "凋零之触", "en": "Withering Touch"}
+{"zh": "几率点燃", "en": "Combustion"}
+{"zh": "几率流血", "en": "Chance to Bleed"}
+{"zh": "连锁", "en": "Chain"}
+{"zh": "吟唱时施放", "en": "Cast while Channelling"}
+{"zh": "晕眩时施放", "en": "Cast when Stunned"}
+{"zh": "近战击败时施放", "en": "Cast on Melee Kill"}
+{"zh": "死亡时施放", "en": "Cast on Death"}
+{"zh": "受伤时施放", "en": "Cast when Damage Taken"}
+{"zh": "暴击时施放", "en": "Cast On Critical Strike"}
+{"zh": "残暴", "en": "Brutality"}
+{"zh": "彻骨", "en": "Bonechill"}
+{"zh": "血魔法", "en": "Arrogance"}
+{"zh": "嗜血", "en": "Bloodlust"}
+{"zh": "致盲", "en": "Blind"}
+{"zh": "诅咒光环", "en": "Blasphemy"}
+{"zh": "弹幕", "en": "Barrage"}
+{"zh": "箭之新星", "en": "Arrow Nova"}
+{"zh": "大法师", "en": "Archmage"}
+{"zh": "秘术增强", "en": "Arcane Surge"}
+{"zh": "额外命中", "en": "Additional Accuracy"}
+{"zh": "附加闪电伤害", "en": "Added Lightning Damage"}
+{"zh": "附加火焰伤害", "en": "Added Fire Damage"}
+{"zh": "附加冰霜伤害", "en": "Added Cold Damage"}
+{"zh": "附加混沌伤害", "en": "Added Chaos Damage"}
+{"zh": "战争铁拳", "en": "Fist of War"}
+{"zh": "迅猛烙印", "en": "Swiftbrand"}
+{"zh": "紧急号令", "en": "Urgent Orders"}
+{"zh": "会心一击", "en": "Pinpoint"}
+{"zh": "末日将至", "en": "Impending Doom"}
+{"zh": "三位一体", "en": "Trinity"}
+{"zh": "血气", "en": "Bloodthirst"}
+{"zh": "凌厉", "en": "Cruelty"}
+{"zh": "赤炼", "en": "Lifetap"}
+{"zh": "弩炮集火", "en": "Focused Ballista"}
+{"zh": "超能增助", "en": "Overexertion"}
+{"zh": "斩首", "en": "Behead"}
+{"zh": "击中时施加印记", "en": "Mark On Hit"}
+{"zh": "残破", "en": "Rupture"}
+{"zh": "恒祝", "en": "Eternal Blessing"}
+{"zh": "强化聚能", "en": "Overcharge"}
+{"zh": "诅咒之地", "en": "Cursed Ground"}
+{"zh": "魔蛊绽放", "en": "Hex Bloom"}
+{"zh": "法铸箭矢", "en": "Manaforged Arrows"}
+{"zh": "棱光魔爆", "en": "Prismatic Burst"}
+{"zh": "投射物归返", "en": "Returning Projectiles"}
+{"zh": "内伤", "en": "Trauma"}
+{"zh": "碎影魔刃", "en": "Spellblade"}
+{"zh": "吞噬", "en": "Devour"}
+{"zh": "鲜肉", "en": "Fresh Meat"}
+{"zh": "焚木烈火", "en": "Flamewood"}
+{"zh": "腐化战吼", "en": "Corrupting Cry"}
+{"zh": "无常", "en": "Volatility"}
+{"zh": "守卫祝福", "en": "Guardian's Blessing"}
+{"zh": "牺牲", "en": "Sacrifice"}
+{"zh": "冰冽连接", "en": "Frigid Bond"}
+{"zh": "核心地雷", "en": "Locus Mine"}
+{"zh": "凌虐", "en": "Sadism"}
+{"zh": "精准炽炎", "en": "Controlled Blaze"}
+{"zh": "圣洁鬼灵", "en": "Sacred Wisps"}
+{"zh": "专擅反击", "en": "Expert Retaliation"}
+{"zh": "专注吟唱", "en": "Focused Channelling"}
+{"zh": "风爆术", "en": "Windburst"}
+{"zh": "念动失稳", "en": "Kinetic Instability"}
+{"zh": "活体闪电", "en": "Living Lightning"}
+{"zh": "神圣驱逐", "en": "Excommunicate"}
+{"zh": "祝福呼唤", "en": "Blessed Call"}
+{"zh": "英勇典范", "en": "Exemplar"}
+{"zh": "圣化", "en": "Hallow"}

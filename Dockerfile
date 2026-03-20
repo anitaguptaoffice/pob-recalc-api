@@ -89,10 +89,13 @@ RUN luarocks install luautf8 0.1.6-1
 # ============================================================
 # Stage 4: Build Go API binary
 # ============================================================
-FROM golang:1.22-alpine AS go-builder
+FROM golang:1.23-alpine AS go-builder
 
 WORKDIR /build
-COPY go.mod main.go ./
+COPY go.mod ./
+COPY main.go ./
+COPY translator/ ./translator/
+COPY cn-poe-utils/go/ ./cn-poe-utils/go/
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o pob-api .
 
 # ============================================================

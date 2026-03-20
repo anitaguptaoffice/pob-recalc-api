@@ -18,6 +18,8 @@ import (
 	"sync"
 	"syscall"
 	"time"
+
+	"pob_api/translator"
 )
 
 // ---------------------------------------------------------------------------
@@ -926,6 +928,142 @@ func (s *Server) handleFindBestAnoint(w http.ResponseWriter, r *http.Request) {
 	w.Write(result)
 }
 
+func (s *Server) handleTranslateItem(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed. Use POST.", http.StatusMethodNotAllowed)
+		return
+	}
+
+	body, err := io.ReadAll(io.LimitReader(r.Body, 2*1024*1024)) // 2MB limit
+	if err != nil {
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	if len(body) == 0 {
+		http.Error(w, "Empty request body. Send a single item JSON object from the trade API.", http.StatusBadRequest)
+		return
+	}
+
+	start := time.Now()
+
+	result, err := translator.TranslateItem(body)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Translation failed: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	translateTime := time.Since(start)
+	log.Printf("[http] /translate-item: %d bytes JSON → slot=%q, %d bytes item text (%.1fms)",
+		len(body), result.Slot, len(result.ItemText), float64(translateTime.Microseconds())/1000)
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.Header().Set("X-Translate-Time-Ms", fmt.Sprintf("%.1f", float64(translateTime.Microseconds())/1000))
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(result)
+}
+
+func (s *Server) handleTranslate(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed. Use POST.", http.StatusMethodNotAllowed)
+		return
+	}
+
+	body, err := io.ReadAll(io.LimitReader(r.Body, 5*1024*1024)) // 5MB limit
+	if err != nil {
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	if len(body) == 0 {
+		http.Error(w, "Empty request body. Send JSON with 'items' and 'passiveSkills' fields.", http.StatusBadRequest)
+		return
+	}
+
+	start := time.Now()
+
+	xmlStr, err := translator.TranslateItemsJSON(body)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Translation failed: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	translateTime := time.Since(start)
+	log.Printf("[http] /translate: %d bytes JSON → %d bytes XML (%.1fms)",
+		len(body), len(xmlStr), float64(translateTime.Microseconds())/1000)
+
+	w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+	w.Header().Set("X-Translate-Time-Ms", fmt.Sprintf("%.1f", float64(translateTime.Microseconds())/1000))
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(xmlStr))
+}
+
+func (s *Server) handleTranslateAndRecalc(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed. Use POST.", http.StatusMethodNotAllowed)
+		return
+	}
+
+	body, err := io.ReadAll(io.LimitReader(r.Body, 5*1024*1024)) // 5MB limit
+	if err != nil {
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	if len(body) == 0 {
+		http.Error(w, "Empty request body. Send JSON with 'items' and 'passiveSkills' fields.", http.StatusBadRequest)
+		return
+	}
+
+	start := time.Now()
+
+	// Step 1: Translate Chinese → English POB XML
+	xmlStr, err := translator.TranslateItemsJSON(body)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Translation failed: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	translateTime := time.Since(start)
+	xmlInput := []byte(xmlStr)
+	log.Printf("[http] /translate-and-recalc: Translated %d bytes JSON → %d bytes XML (%.1fms)",
+		len(body), len(xmlInput), float64(translateTime.Microseconds())/1000)
+
+	// Step 2: Acquire a worker for recalculation
+	worker, err := s.pool.Acquire(30 * time.Second)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("No available worker: %v", err), http.StatusServiceUnavailable)
+		return
+	}
+	defer s.pool.Release(worker)
+
+	// Step 3: Recalculate
+	recalcStart := time.Now()
+	xmlOutput, err := worker.Recalc(xmlInput)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Recalculation failed: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	recalcTime := time.Since(recalcStart)
+	totalTime := time.Since(start)
+	log.Printf("[http] /translate-and-recalc: Complete (translate=%.1fms, recalc=%.1fms, total=%.1fms)",
+		float64(translateTime.Microseconds())/1000,
+		float64(recalcTime.Microseconds())/1000,
+		float64(totalTime.Microseconds())/1000)
+
+	// Step 4: Return recalculated XML
+	w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+	w.Header().Set("X-Translate-Time-Ms", fmt.Sprintf("%.1f", float64(translateTime.Microseconds())/1000))
+	w.Header().Set("X-Recalc-Time-Ms", fmt.Sprintf("%.1f", float64(recalcTime.Microseconds())/1000))
+	w.Header().Set("X-Total-Time-Ms", fmt.Sprintf("%.1f", float64(totalTime.Microseconds())/1000))
+	w.WriteHeader(http.StatusOK)
+	w.Write(xmlOutput)
+}
+
 func (s *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusOK)
@@ -1007,6 +1145,13 @@ func main() {
 		}
 	}
 
+	// Initialize translator (loads embedded translation data)
+	log.Println("Initializing Chinese→English translator...")
+	if err := translator.Init(); err != nil {
+		log.Fatalf("Failed to initialize translator: %v", err)
+	}
+	log.Println("Translator initialized successfully")
+
 	// Start worker pool
 	pool, err := newWorkerPool(poolSize, srcDir, luaPath, luaCPath, workerScript)
 	if err != nil {
@@ -1021,6 +1166,9 @@ func main() {
 	mux.HandleFunc("/replace-item", srv.handleReplaceItem)
 	mux.HandleFunc("/generate-weights", srv.handleGenerateWeights)
 	mux.HandleFunc("/find-best-anoint", srv.handleFindBestAnoint)
+	mux.HandleFunc("/translate-item", srv.handleTranslateItem)
+	mux.HandleFunc("/translate", srv.handleTranslate)
+	mux.HandleFunc("/translate-and-recalc", srv.handleTranslateAndRecalc)
 	mux.HandleFunc("/health", srv.handleHealth)
 	mux.HandleFunc("/version", srv.handleVersion)
 
@@ -1044,12 +1192,15 @@ func main() {
 	}()
 
 	log.Printf("Server listening on %s", listenAddr)
-	log.Printf("  POST /recalc            — Send POB code, get recalculated XML")
-	log.Printf("  POST /replace-item      — Replace an item and compare DPS")
-	log.Printf("  POST /generate-weights  — Generate stat weights for a slot")
-	log.Printf("  POST /find-best-anoint  — Find best anoint for amulet")
-	log.Printf("  GET  /health            — Health check")
-	log.Printf("  GET  /version           — Show POB source version info")
+	log.Printf("  POST /recalc              — Send POB code, get recalculated XML")
+	log.Printf("  POST /replace-item        — Replace an item and compare DPS")
+	log.Printf("  POST /generate-weights    — Generate stat weights for a slot")
+	log.Printf("  POST /find-best-anoint    — Find best anoint for amulet")
+	log.Printf("  POST /translate-item       — Translate single CN item JSON → EN POB text + slot")
+	log.Printf("  POST /translate           — Translate CN items JSON → EN POB XML")
+	log.Printf("  POST /translate-and-recalc — Translate + recalculate")
+	log.Printf("  GET  /health              — Health check")
+	log.Printf("  GET  /version             — Show POB source version info")
 
 	if err := httpSrv.ListenAndServe(); err != http.ErrServerClosed {
 		log.Fatalf("HTTP server error: %v", err)

@@ -1,0 +1,72 @@
+[
+  {
+    "zh": "先锋腰带",
+    "en": "Vanguard Belt",
+    "key": "Metadata/Items/Belts/BeltAtlas1"
+  },
+  {
+    "zh": "水晶腰带",
+    "en": "Crystal Belt",
+    "key": "Metadata/Items/Belts/BeltAtlas2"
+  },
+  {
+    "zh": "警戒腰带",
+    "en": "Mechalarm Belt",
+    "key": "Metadata/Items/Belts/BeltE2"
+  },
+  {
+    "zh": "机关腰带",
+    "en": "Mechanical Belt",
+    "key": "Metadata/Items/Belts/BeltE3"
+  },
+  {
+    "zh": "低酿腰带",
+    "en": "Micro-Distillery Belt",
+    "key": "Metadata/Items/Belts/BeltE1"
+  },
+  {
+    "zh": "饰布腰带",
+    "en": "Cloth Belt",
+    "key": "Metadata/Items/Belts/Belt5"
+  },
+  {
+    "zh": "扣钉腰带",
+    "en": "Studded Belt",
+    "key": "Metadata/Items/Belts/Belt6"
+  },
+  {
+    "zh": "金羽腰带",
+    "en": "Golden Obi",
+    "key": "Metadata/Items/Belts/BeltDemigods1"
+  },
+  {
+    "zh": "皮革腰带",
+    "en": "Leather Belt",
+    "key": "Metadata/Items/Belts/Belt3"
+  },
+  {
+    "zh": "重革腰带",
+    "en": "Heavy Belt",
+    "key": "Metadata/Items/Belts/Belt4"
+  },
+  {
+    "zh": "素布腰带",
+    "en": "Rustic Sash",
+    "key": "Metadata/Items/Belts/Belt1"
+  },
+  {
+    "zh": "扣链腰带",
+    "en": "Chain Belt",
+    "key": "Metadata/Items/Belts/Belt2"
+  },
+  {
+    "zh": "深渊腰带",
+    "en": "Stygian Vise",
+    "key": "Metadata/Items/Belts/BeltAbyss"
+  },
+  {
+    "zh": "细线腰带",
+    "en": "Cord Belt",
+    "key": "Metadata/Items/Belts/BeltFaridun"
+  }
+]
