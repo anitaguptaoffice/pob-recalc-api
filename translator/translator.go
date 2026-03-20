@@ -4,8 +4,10 @@ package translator
 
 import (
 	_ "embed"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"sync"
 
 	"github.com/cn-poe-community/cn-poe-utils/go/api"
@@ -136,71 +138,110 @@ func TranslateItem(itemJSON []byte) (*TranslateItemResult, error) {
 	}, nil
 }
 
+// iconPathPatterns maps icon URL path segments to POB slot names.
+// These patterns are matched against both the raw icon URL and
+// the decoded path from CN CDN base64-encoded URLs.
+var iconPathPatterns = []struct {
+	pattern string
+	slot    string
+}{
+	// Armour slots (check before weapons since shields could conflict)
+	{"Helmets", "Helmet"},
+	{"BodyArmours", "Body Armour"},
+	{"Gloves", "Gloves"},
+	{"Boots", "Boots"},
+	{"Shields", "Weapon 2"},
+	// Accessories
+	{"Amulets", "Amulet"},
+	{"Rings", "Ring 1"},
+	{"Belts", "Belt"},
+	{"Quivers", "Weapon 2"},
+	// Other
+	{"Flasks", "Flask 1"},
+	{"Jewels", "Jewel 1"},
+	// Weapons
+	{"OneHandWeapons", "Weapon 1"},
+	{"TwoHandWeapons", "Weapon 1"},
+	{"Daggers", "Weapon 1"},
+	{"Claws", "Weapon 1"},
+	{"Wands", "Weapon 1"},
+	{"Sceptres", "Weapon 1"},
+}
+
+// extractIconPath extracts the item asset path from the icon URL.
+// For international servers, the path is directly in the URL (e.g. .../2DItems/Armours/BodyArmours/...).
+// For CN servers, the path is base64-encoded in a segment like /gen/image/WzI1LDE0LHsi.../hash/name.png.
+// Returns the raw URL as fallback if decoding fails.
+func extractIconPath(iconURL string) string {
+	// CN CDN pattern: .../gen/image/<base64>/hash/name.png
+	// The base64 segment decodes to JSON like: [25,14,{"f":"2DItems/Armours/BodyArmours/...","w":2,"h":3,"scale":1}]
+	if idx := strings.Index(iconURL, "/gen/image/"); idx >= 0 {
+		rest := iconURL[idx+len("/gen/image/"):]
+		// The base64 part is the first path segment after /gen/image/
+		if slashIdx := strings.Index(rest, "/"); slashIdx > 0 {
+			b64 := rest[:slashIdx]
+			// Try standard base64 (with padding)
+			if decoded, err := base64.StdEncoding.DecodeString(b64); err == nil {
+				return string(decoded)
+			}
+			// Try raw base64 (without padding) - CN CDN often omits padding
+			if decoded, err := base64.RawStdEncoding.DecodeString(b64); err == nil {
+				return string(decoded)
+			}
+			// Try URL-safe variants
+			if decoded, err := base64.URLEncoding.DecodeString(b64); err == nil {
+				return string(decoded)
+			}
+			if decoded, err := base64.RawURLEncoding.DecodeString(b64); err == nil {
+				return string(decoded)
+			}
+		}
+	}
+	return iconURL
+}
+
 // detectSlotFromItem tries to determine the POB equipment slot from the item's icon URL
 // or other properties. This is a best-effort detection for trade items which lack inventoryId.
 func detectSlotFromItem(item *api.Item) string {
-	icon := item.Icon
+	// First, try to match from the icon path (works for both international and CN servers)
+	iconPath := extractIconPath(item.Icon)
 
-	// Detect from icon URL patterns (trade API items have descriptive icon URLs)
-	iconSlotMap := map[string]string{
-		"/Helmets/":     "Helmet",
-		"/BodyArmours/": "Body Armour",
-		"/Gloves/":      "Gloves",
-		"/Boots/":       "Boots",
-		"/Shields/":     "Weapon 2",
-		"/Amulets/":     "Amulet",
-		"/Rings/":       "Ring 1",
-		"/Belts/":       "Belt",
-		"/Quivers/":     "Weapon 2",
-		"/Flasks/":      "Flask 1",
-		"/Jewels/":      "Jewel 1",
-		// Weapons → Weapon 1
-		"/OneHandWeapons/":  "Weapon 1",
-		"/TwoHandWeapons/":  "Weapon 1",
-		"/Daggers/":         "Weapon 1",
-		"/Claws/":           "Weapon 1",
-		"/Wands/":           "Weapon 1",
-		"/Sceptres/":        "Weapon 1",
-	}
-
-	for pattern, slot := range iconSlotMap {
-		if containsStr(icon, pattern) {
-			return slot
+	for _, entry := range iconPathPatterns {
+		if strings.Contains(iconPath, entry.pattern) {
+			return entry.slot
 		}
 	}
 
-	// Fallback: try baseType patterns
-	baseType := item.BaseType
-	baseTypeSlotMap := map[string]string{
-		"Ring":   "Ring 1",
-		"Amulet": "Amulet",
-		"Belt":   "Belt",
-		"Quiver": "Weapon 2",
-		"Shield": "Weapon 2",
-		"Flask":  "Flask 1",
-		"Jewel":  "Jewel 1",
+	// Also try matching the raw URL directly (in case extractIconPath returned something unexpected)
+	if iconPath != item.Icon {
+		for _, entry := range iconPathPatterns {
+			if strings.Contains(item.Icon, entry.pattern) {
+				return entry.slot
+			}
+		}
 	}
-	for pattern, slot := range baseTypeSlotMap {
-		if containsStr(baseType, pattern) {
-			return slot
+
+	// Fallback: try baseType patterns (item.BaseType is already translated to English at this point)
+	baseType := item.BaseType
+	baseTypeSlotMap := []struct {
+		pattern string
+		slot    string
+	}{
+		{"Ring", "Ring 1"},
+		{"Amulet", "Amulet"},
+		{"Belt", "Belt"},
+		{"Quiver", "Weapon 2"},
+		{"Shield", "Weapon 2"},
+		{"Flask", "Flask 1"},
+		{"Jewel", "Jewel 1"},
+	}
+	for _, entry := range baseTypeSlotMap {
+		if strings.Contains(baseType, entry.pattern) {
+			return entry.slot
 		}
 	}
 
 	return "Weapon 1" // fallback
-}
-
-func containsStr(s, substr string) bool {
-	return len(s) >= len(substr) && (s == substr || len(substr) == 0 ||
-		findSubstring(s, substr))
-}
-
-func findSubstring(s, substr string) bool {
-	for i := 0; i <= len(s)-len(substr); i++ {
-		if s[i:i+len(substr)] == substr {
-			return true
-		}
-	}
-	return false
 }
 
 func splitLines(s string) []string {

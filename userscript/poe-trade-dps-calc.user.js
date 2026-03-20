@@ -263,6 +263,16 @@
     .pob-float-entry .pob-status-dot.disconnected {
       background: #e03030;
     }
+
+    /* 快速摘要 */
+    .pob-quick-summary {
+      display: inline-block;
+      margin-left: 6px;
+      font-size: 11px;
+      font-weight: bold;
+      font-family: "FontinSmallCaps", Verdana, sans-serif;
+      vertical-align: middle;
+    }
   `);
 
   // =========================================================================
@@ -629,8 +639,34 @@
           // Step 2: 替换对比 — 用翻译后的英文 item text
           btn.innerHTML = '计算中';
           const result = await callReplaceItemAPI(config.pobCode, slot, itemText);
+          console.log('[POB DPS Calc] 对比结果:', JSON.stringify(result, null, 2));
+
+          // 在按钮旁边显示简短摘要，方便确认结果
+          const dpsChange = result.diff && result.diff.TotalDPS !== undefined ? result.diff.TotalDPS : null;
+          const lifeChange = result.diff && result.diff.Life !== undefined ? result.diff.Life : null;
+          let summary = '';
+          if (dpsChange !== null) {
+            summary += `DPS: ${dpsChange >= 0 ? '+' : ''}${numberFormat(dpsChange)}`;
+          }
+          if (lifeChange !== null && Math.abs(lifeChange) >= 1) {
+            summary += ` | 生命: ${lifeChange >= 0 ? '+' : ''}${Math.round(lifeChange)}`;
+          }
+          if (summary) {
+            let tag = btn.parentElement.querySelector('.pob-quick-summary');
+            if (!tag) {
+              tag = document.createElement('span');
+              tag.className = 'pob-quick-summary';
+              tag.style.cssText = 'margin-left:6px;font-size:11px;font-weight:bold;';
+              btn.parentElement.insertBefore(tag, btn.nextSibling);
+            }
+            const color = (dpsChange || 0) >= 0 ? '#20c820' : '#e03030';
+            tag.style.color = color;
+            tag.textContent = summary;
+          }
+
           renderResultPanel(result, row);
         } catch (err) {
+          console.error('[POB DPS Calc] 错误:', err);
           renderErrorPanel(err.message, row);
         } finally {
           btn.classList.remove('loading');
