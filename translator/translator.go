@@ -244,6 +244,38 @@ func detectSlotFromItem(item *api.Item) string {
 	return "Weapon 1" // fallback
 }
 
+// ConvertItem converts a single English item JSON (from international trade API)
+// into POB item text format WITHOUT translation. This is for international server
+// items that are already in English.
+// It accepts the raw item JSON from the POE trade API (the "item" field from a fetch result).
+// Returns the POB-format item text and the detected equipment slot name.
+func ConvertItem(itemJSON []byte) (*TranslateItemResult, error) {
+	var item api.Item
+	if err := json.Unmarshal(itemJSON, &item); err != nil {
+		return nil, fmt.Errorf("invalid item JSON: %w", err)
+	}
+
+	// Skip translation — item is already in English
+
+	// Generate POB item text using the XML item builder
+	xmlItem := pobxml.NewItem(1, &item)
+	itemStr := xmlItem.String()
+
+	// Strip the XML wrapper tags: <Item id="1"> ... </Item>
+	lines := splitLines(itemStr)
+	if len(lines) >= 3 {
+		itemStr = joinLines(lines[1 : len(lines)-1])
+	}
+
+	// Detect slot from item category
+	slot := detectSlotFromItem(&item)
+
+	return &TranslateItemResult{
+		ItemText: itemStr,
+		Slot:     slot,
+	}, nil
+}
+
 func splitLines(s string) []string {
 	var lines []string
 	start := 0

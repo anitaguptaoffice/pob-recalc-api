@@ -964,6 +964,42 @@ func (s *Server) handleTranslateItem(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(result)
 }
 
+func (s *Server) handleConvertItem(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed. Use POST.", http.StatusMethodNotAllowed)
+		return
+	}
+
+	body, err := io.ReadAll(io.LimitReader(r.Body, 2*1024*1024)) // 2MB limit
+	if err != nil {
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	if len(body) == 0 {
+		http.Error(w, "Empty request body. Send a single item JSON object from the trade API.", http.StatusBadRequest)
+		return
+	}
+
+	start := time.Now()
+
+	result, err := translator.ConvertItem(body)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Conversion failed: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	convertTime := time.Since(start)
+	log.Printf("[http] /convert-item: %d bytes JSON → slot=%q, %d bytes item text (%.1fms)",
+		len(body), result.Slot, len(result.ItemText), float64(convertTime.Microseconds())/1000)
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.Header().Set("X-Convert-Time-Ms", fmt.Sprintf("%.1f", float64(convertTime.Microseconds())/1000))
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(result)
+}
+
 func (s *Server) handleTranslate(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed. Use POST.", http.StatusMethodNotAllowed)
@@ -1167,6 +1203,7 @@ func main() {
 	mux.HandleFunc("/generate-weights", srv.handleGenerateWeights)
 	mux.HandleFunc("/find-best-anoint", srv.handleFindBestAnoint)
 	mux.HandleFunc("/translate-item", srv.handleTranslateItem)
+	mux.HandleFunc("/convert-item", srv.handleConvertItem)
 	mux.HandleFunc("/translate", srv.handleTranslate)
 	mux.HandleFunc("/translate-and-recalc", srv.handleTranslateAndRecalc)
 	mux.HandleFunc("/health", srv.handleHealth)
