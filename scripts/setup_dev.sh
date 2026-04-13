@@ -20,6 +20,9 @@ if [ "$1" = "update" ] || [ ! -d "$CN_POE_DIR/go" ]; then
     git clone --branch "$CN_POE_BRANCH" --depth 1 "$CN_POE_REPO" "$CN_POE_DIR"
     echo "cn-poe-utils: $(cd "$CN_POE_DIR" && git rev-parse --short HEAD) @ $(cd "$CN_POE_DIR" && git log -1 --format=%ci)"
 
+    # Remove .git so VSCode doesn't treat it as a sub-repo
+    rm -rf "$CN_POE_DIR/.git"
+
     # Fix go.mod if upstream requires newer Go version
     if grep -q "^go 1\.\(2[4-9]\|[3-9]\)" "$CN_POE_DIR/go/go.mod" 2>/dev/null; then
         echo "Fixing go.mod version..."
