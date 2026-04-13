@@ -155,19 +155,17 @@ func (c *BuildCostCalculator) priceEquipment(item POBItem, trade *TradeClient, c
 	}
 
 	// Translate names — strip mutation prefixes like "Foulborn", "Blightborn" etc.
-	itemName := item.Name
 	if item.Name != "" {
-		if _, ok := c.uniqueEnToZh[itemName]; !ok {
+		if zh, ok := c.uniqueEnToZh[item.Name]; ok {
+			result.NameZh = zh
+		} else {
 			// Try stripping common mutation/corruption prefixes
-			stripped := stripMutationPrefix(itemName)
-			if stripped != itemName {
+			stripped := stripMutationPrefix(item.Name)
+			if stripped != item.Name {
 				if zh, ok := c.uniqueEnToZh[stripped]; ok {
 					result.NameZh = zh
-					itemName = stripped
 				}
 			}
-		} else {
-			result.NameZh = c.uniqueEnToZh[itemName]
 		}
 	}
 	if item.BaseType != "" {

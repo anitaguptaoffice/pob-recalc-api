@@ -553,7 +553,7 @@ func (p *WorkerPool) Release(w *Worker) {
 	p.workers <- w
 }
 
-func (p *WorkerPool) replaceWorker(old *Worker) (*Worker, error) {
+func (p *WorkerPool) replaceWorker(_ *Worker) (*Worker, error) {
 	p.mu.Lock()
 	id := p.nextID
 	p.nextID++

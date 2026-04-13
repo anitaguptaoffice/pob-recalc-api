@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"html"
 	"log"
-	"strconv"
 	"strings"
 )
 
@@ -213,36 +212,6 @@ func DeduplicateGems(gems []POBGem) []POBGem {
 	return result
 }
 
-// extractBaseTypeFromMagic attempts to extract the base type from a magic item name.
-// Magic items have format like "Quicksilver Flask" or "of Adrenaline Quicksilver Flask".
-// For flasks, we try to match known base types.
-func extractBaseTypeFromMagic(name string) string {
-	// Common flask base types
-	flaskBases := []string{
-		"Divine Life Flask", "Eternal Life Flask", "Hallowed Life Flask",
-		"Sacred Life Flask", "Sanctified Life Flask",
-		"Divine Mana Flask", "Eternal Mana Flask",
-		"Quicksilver Flask", "Granite Flask", "Jade Flask",
-		"Diamond Flask", "Basalt Flask", "Quartz Flask",
-		"Amethyst Flask", "Ruby Flask", "Sapphire Flask", "Topaz Flask",
-		"Bismuth Flask", "Stibnite Flask", "Sulphur Flask",
-		"Silver Flask", "Aquamarine Flask", "Gold Flask",
-	}
-	for _, base := range flaskBases {
-		if strings.Contains(name, base) {
-			return base
-		}
-	}
-	return name
-}
-
 func intPtr(v int) *int {
 	return &v
-}
-
-func atoiDefault(s string, def int) int {
-	if v, err := strconv.Atoi(s); err == nil {
-		return v
-	}
-	return def
 }
