@@ -1,0 +1,33 @@
+{
+  "diagnostics": {
+    "globals": [
+      "build",
+      "common",
+      "data",
+      "new",
+      "runCallback",
+      "loadBuildFromXML",
+      "LoadModule",
+      "Deflate",
+      "Inflate",
+      "ConPrintf",
+      "GetScriptPath",
+      "GetRuntimePath",
+      "MakeDir",
+      "RemoveDir",
+      "NewFileSearch",
+      "GetVirtualScreenSize",
+      "SetWindowTitle",
+      "dofile"
+    ],
+    "disable": [
+      "redefined-local"
+    ]
+  },
+  "runtime.version": "LuaJIT",
+  "workspace.ignoreDir": [
+    "cn-poe-utils",
+    ".git",
+    "translate_data"
+  ]
+}
