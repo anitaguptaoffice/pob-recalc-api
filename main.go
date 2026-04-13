@@ -19,6 +19,7 @@ import (
 	"syscall"
 	"time"
 
+	"pob_api/pricer"
 	"pob_api/translator"
 )
 
@@ -583,7 +584,8 @@ func (p *WorkerPool) Shutdown() {
 // ---------------------------------------------------------------------------
 
 type Server struct {
-	pool *WorkerPool
+	pool   *WorkerPool
+	pricer *pricer.BuildCostCalculator
 }
 
 func (s *Server) handleRecalc(w http.ResponseWriter, r *http.Request) {
@@ -1100,6 +1102,64 @@ func (s *Server) handleTranslateAndRecalc(w http.ResponseWriter, r *http.Request
 	w.Write(xmlOutput)
 }
 
+func (s *Server) handleBuildCost(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed. Use POST.", http.StatusMethodNotAllowed)
+		return
+	}
+
+	body, err := io.ReadAll(io.LimitReader(r.Body, 2*1024*1024))
+	if err != nil {
+		http.Error(w, "Failed to read request body", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	var req pricer.BuildCostRequest
+	if err := json.Unmarshal(body, &req); err != nil {
+		http.Error(w, fmt.Sprintf("Invalid JSON: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	if req.PobCode == "" {
+		http.Error(w, "Missing required field: pob_code", http.StatusBadRequest)
+		return
+	}
+	if req.POESESSID == "" {
+		http.Error(w, "Missing required field: poesessid (needed for CN trade API)", http.StatusBadRequest)
+		return
+	}
+
+	start := time.Now()
+	log.Printf("[http] /build-cost: Decoding POB code (%d chars)", len(req.PobCode))
+
+	// Decode POB code → XML
+	xmlData, err := decodePOBCode(req.PobCode)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Failed to decode POB code: %v", err), http.StatusBadRequest)
+		return
+	}
+
+	decodeTime := time.Since(start)
+	log.Printf("[http] /build-cost: Decoded POB code → %d bytes XML (%.1fms)",
+		len(xmlData), float64(decodeTime.Microseconds())/1000)
+
+	result, err := s.pricer.Calculate(&req, xmlData)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Build cost calculation failed: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	totalTime := time.Since(start)
+	log.Printf("[http] /build-cost: Complete — %d items, %d gems, total=%.0f chaos (%.1f divine), took %.1fs",
+		len(result.Items), len(result.Gems), result.TotalChaos, result.TotalDivine, totalTime.Seconds())
+
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
+	w.Header().Set("X-Total-Time-Ms", fmt.Sprintf("%.1f", float64(totalTime.Microseconds())/1000))
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(result)
+}
+
 func (s *Server) handleHealth(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain")
 	w.WriteHeader(http.StatusOK)
@@ -1195,7 +1255,12 @@ func main() {
 	}
 
 	// Create server
-	srv := &Server{pool: pool}
+	buildCostCalc, err := pricer.NewBuildCostCalculator()
+	if err != nil {
+		log.Fatalf("Failed to initialize build cost calculator: %v", err)
+	}
+
+	srv := &Server{pool: pool, pricer: buildCostCalc}
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/recalc", srv.handleRecalc)
@@ -1206,6 +1271,7 @@ func main() {
 	mux.HandleFunc("/convert-item", srv.handleConvertItem)
 	mux.HandleFunc("/translate", srv.handleTranslate)
 	mux.HandleFunc("/translate-and-recalc", srv.handleTranslateAndRecalc)
+	mux.HandleFunc("/build-cost", srv.handleBuildCost)
 	mux.HandleFunc("/health", srv.handleHealth)
 	mux.HandleFunc("/version", srv.handleVersion)
 
@@ -1236,6 +1302,7 @@ func main() {
 	log.Printf("  POST /translate-item       — Translate single CN item JSON → EN POB text + slot")
 	log.Printf("  POST /translate           — Translate CN items JSON → EN POB XML")
 	log.Printf("  POST /translate-and-recalc — Translate + recalculate")
+	log.Printf("  POST /build-cost          — Calculate build cost from poe.ninja URL")
 	log.Printf("  GET  /health              — Health check")
 	log.Printf("  GET  /version             — Show POB source version info")
 

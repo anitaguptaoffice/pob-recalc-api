@@ -28,6 +28,11 @@ var (
 	initErr         error
 )
 
+// GetPoeData returns the loaded translation data. Must call Init() first.
+func GetPoeData() *poe.Data {
+	return &globalPoeData
+}
+
 // Init initializes the translation engine. It's safe to call multiple times;
 // actual initialization happens only once. Returns any initialization error.
 func Init() error {
