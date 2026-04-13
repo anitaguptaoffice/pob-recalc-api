@@ -745,17 +745,17 @@ func (s *Server) handleGenerateWeights(w http.ResponseWriter, r *http.Request) {
 
 	// Parse JSON request body
 	var req struct {
-		PobCode           string `json:"pob_code"`
-		Slot              string `json:"slot"`
-		StatWeights       []struct {
+		PobCode     string `json:"pob_code"`
+		Slot        string `json:"slot"`
+		StatWeights []struct {
 			Stat       string  `json:"stat"`
 			WeightMult float64 `json:"weightMult"`
 		} `json:"stat_weights"`
-		IncludeCorrupted  bool `json:"include_corrupted"`
-		IncludeEldritch   bool `json:"include_eldritch"`
-		IncludeScourge    bool `json:"include_scourge"`
-		IncludeSynthesis  bool `json:"include_synthesis"`
-		IncludeTalisman   bool `json:"include_talisman"`
+		IncludeCorrupted bool `json:"include_corrupted"`
+		IncludeEldritch  bool `json:"include_eldritch"`
+		IncludeScourge   bool `json:"include_scourge"`
+		IncludeSynthesis bool `json:"include_synthesis"`
+		IncludeTalisman  bool `json:"include_talisman"`
 	}
 
 	body, err := io.ReadAll(io.LimitReader(r.Body, 2*1024*1024)) // 2MB limit
@@ -794,12 +794,12 @@ func (s *Server) handleGenerateWeights(w http.ResponseWriter, r *http.Request) {
 
 	// Step 2: Build options JSON to pass to worker
 	optionsJSON, _ := json.Marshal(map[string]interface{}{
-		"stat_weights":       req.StatWeights,
-		"include_corrupted":  req.IncludeCorrupted,
-		"include_eldritch":   req.IncludeEldritch,
-		"include_scourge":    req.IncludeScourge,
-		"include_synthesis":  req.IncludeSynthesis,
-		"include_talisman":   req.IncludeTalisman,
+		"stat_weights":      req.StatWeights,
+		"include_corrupted": req.IncludeCorrupted,
+		"include_eldritch":  req.IncludeEldritch,
+		"include_scourge":   req.IncludeScourge,
+		"include_synthesis": req.IncludeSynthesis,
+		"include_talisman":  req.IncludeTalisman,
 	})
 
 	// Step 3: Acquire a worker (longer timeout for weight calculation)
