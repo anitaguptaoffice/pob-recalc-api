@@ -13,8 +13,9 @@
   - [2. POST /replace-item — 装备替换对比](#2-post-replace-item--装备替换对比)
   - [3. POST /generate-weights — 属性权重生成](#3-post-generate-weights--属性权重生成)
   - [4. POST /find-best-anoint — 最优涂油选择](#4-post-find-best-anoint--最优涂油选择)
-  - [5. GET /health — 健康检查](#5-get-health--健康检查)
-  - [6. GET /version — 版本信息](#6-get-version--版本信息)
+  - [5. POST /build-cost — Build 造价估算](#5-post-build-cost--build-造价估算)
+  - [6. GET /health — 健康检查](#6-get-health--健康检查)
+  - [7. GET /version — 版本信息](#7-get-version--版本信息)
 - [功能详解](#功能详解)
   - [全局自定义修正 (Custom Modifiers)](#全局自定义修正-custom-modifiers)
   - [物品词缀标记](#物品词缀标记)
@@ -447,7 +448,79 @@ tests/test_find_best_anoint.py — 多排序指标 + 搜索过滤测试
 
 ---
 
-### 5. GET /health — 健康检查
+### 5. POST /build-cost — Build 造价估算
+
+解析 POB code 中的装备和宝石，通过国服 Trade API 查询价格，输出总造价。
+
+**用途**：快速估算一个 build 的总成本。
+
+#### 请求
+
+```json
+POST /build-cost
+Content-Type: application/json
+
+{
+  "pob_code": "eNrtPdl2...",
+  "poesessid": "你的国服POESESSID",
+  "cn_league": "S29赛季"
+}
+```
+
+| 字段 | 类型 | 必填 | 默认 | 说明 |
+|------|------|------|------|------|
+| `pob_code` | string | ✅ | — | POB 分享码 |
+| `poesessid` | string | ✅ | — | 国服 POESESSID cookie（Trade API 认证） |
+| `cn_league` | string | ❌ | `S29赛季` | 国服联赛名 |
+
+#### 响应
+
+```json
+{
+  "divine_rate": 150,
+  "total_chaos": 5000,
+  "total_divine": 33.3,
+  "items": [
+    {
+      "name": "Headhunter",
+      "name_zh": "猎首",
+      "base_type": "Leather Belt",
+      "slot": "Belt",
+      "rarity": "UNIQUE",
+      "price_chaos": 500,
+      "confidence": "high"
+    }
+  ],
+  "gems": [
+    {
+      "name": "Cyclone",
+      "name_zh": "旋风斩",
+      "gem_level": 21,
+      "gem_quality": 20,
+      "price_chaos": 30,
+      "confidence": "medium"
+    }
+  ]
+}
+```
+
+> ⏱ 耗时较长（每件物品约 6 秒查询间隔，受国服 Trade API 限流约束）。
+
+#### curl 示例
+
+```bash
+curl -X POST http://localhost:8080/build-cost \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "pob_code": "eNrtPdl2...",
+    "poesessid": "你的POESESSID",
+    "cn_league": "S29赛季"
+  }'
+```
+
+---
+
+### 6. GET /health — 健康检查
 
 ```
 GET /health
@@ -462,7 +535,7 @@ workers_available: 2
 
 ---
 
-### 6. GET /version — 版本信息
+### 7. GET /version — 版本信息
 
 ```
 GET /version

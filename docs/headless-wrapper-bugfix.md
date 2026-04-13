@@ -199,8 +199,28 @@ RUN cd /app/src && sh /tmp/patch-headless.sh HeadlessWrapper.lua && rm /tmp/patc
 1. `Deflate`/`Inflate` 空壳 → LuaJIT FFI + 系统 libz 实现
 2. `GetScriptPath()`/`GetRuntimePath()` 返回 `""` → 返回 `"."`
 3. `MakeDir(path)` 空操作 → `os.execute("mkdir -p " .. path)`
+4. TimelessJewelData 分片文件（`.zip.part*`）合并为单个 `.zip`
 
-重新构建镜像后需再次验证 API 计算结果是否正确。
+### Bug 5（2026-04-13 新增）：TimelessJewelData .zip 分片加载失败
+
+**背景**：新版 POB 将大型文件（如 `GloriousVanity.zip`，22MB）拆分为 `.zip.part0` ~ `.zip.part4`，通过 `NewFileSearch()` 遍历分片并拼接读取。
+
+**问题**：`HeadlessWrapper.lua` 中 `NewFileSearch()` 是空实现（`function NewFileSearch() end`），返回 `nil`，导致分片文件无法被找到。`io.open("GloriousVanity.zip")` 也失败（单个 .zip 不存在），整个 Timeless Jewel 数据加载失败，进而导致天赋树重置。
+
+**症状**：
+```
+[worker] Tree diagnostic: treeVersion=3_28, classId=0, className=Scion, ascendClassId=0, ascendClassName=None, allocNodes=1
+```
+
+**修复**：在 `patch-headless.sh` 中，于文件系统层面将分片合并回单个 `.zip`：
+```bash
+for base in "$JEWEL_DIR"/*.zip.part0; do
+    cat "${base%.part0}".part* > "${base%.part0}"
+    rm -f "${base%.part0}".part*
+done
+```
+
+这样老的 `io.open()` 路径直接工作，不需要实现 `NewFileSearch()`。
 
 ## 涉及的文件
 
@@ -218,5 +238,5 @@ RUN cd /app/src && sh /tmp/patch-headless.sh HeadlessWrapper.lua && rm /tmp/patc
 
 ## 待办
 
-- [ ] 重新构建 Docker 镜像验证补丁生效：`docker build -t pob-recalc .`
+- [x] Docker 镜像验证补丁生效（包含 Patch 1-5）
 - [ ] 如果上游 PathOfBuilding 合并了相关修复，可移除 `builds/patch-headless.sh` 和 Dockerfile 中的热修步骤
