@@ -2,6 +2,7 @@
 #
 # Standalone project — completely independent of the PathOfBuilding repo.
 # POB source code is fetched from upstream at build time via git clone.
+# cn-poe-utils (translation data) is also fetched from upstream at build time.
 # LuaJIT commit hash is auto-extracted from POB's own Dockerfile.
 #
 # Build:
@@ -10,6 +11,9 @@
 # Build with specific POB branch/tag/commit:
 #   docker build -t pob-api --build-arg POB_BRANCH=dev .
 #   docker build -t pob-api --build-arg POB_BRANCH=v2.40.0 .
+#
+# Build with specific cn-poe-utils branch/tag:
+#   docker build -t pob-api --build-arg CN_POE_UTILS_BRANCH=main .
 #
 # Run:
 #   docker run -p 8080:8080 -e POB_POOL_SIZE=4 pob-api
@@ -87,15 +91,54 @@ COPY --from=luajit-builder /usr/local/bin/luajit* /usr/local/bin/
 RUN luarocks install luautf8 0.1.6-1
 
 # ============================================================
-# Stage 4: Build Go API binary
+# Stage 4a: Clone cn-poe-utils from upstream + generate all.json
+# ============================================================
+FROM python:3.12-alpine AS cn-poe-utils-source
+
+ARG CN_POE_UTILS_REPO=https://github.com/cn-poe-community/cn-poe-utils.git
+ARG CN_POE_UTILS_BRANCH=main
+
+RUN apk add --no-cache git
+
+WORKDIR /cn-poe-utils
+RUN git clone --branch "${CN_POE_UTILS_BRANCH}" --depth 1 "${CN_POE_UTILS_REPO}" . \
+    && echo "cn-poe-utils $(git rev-parse --short HEAD) @ $(git log -1 --format=%ci)"
+
+# Generate all.json from upstream data/db/
+COPY scripts/gen_all_json.py /tmp/gen_all_json.py
+RUN CN_POE_UTILS_DB=/cn-poe-utils/data/db \
+    CN_POE_UTILS_OUT=/cn-poe-utils/all.json \
+    python3 /tmp/gen_all_json.py
+
+# ============================================================
+# Stage 4b: Build Go API binary + run tests to catch breaking changes
 # ============================================================
 FROM golang:1.23-alpine AS go-builder
 
 WORKDIR /build
+
+# Copy Go source from this repo
 COPY go.mod ./
 COPY main.go ./
 COPY translator/ ./translator/
-COPY cn-poe-utils/go/ ./cn-poe-utils/go/
+COPY pricer/ ./pricer/
+
+# Copy cn-poe-utils Go code from UPSTREAM (not vendored)
+COPY --from=cn-poe-utils-source /cn-poe-utils/go/ ./cn-poe-utils/go/
+
+# Copy generated all.json into translator/
+COPY --from=cn-poe-utils-source /cn-poe-utils/all.json ./translator/all.json
+
+# Fix go.mod version if upstream bumped it beyond our Go toolchain
+RUN sed -i 's/^go [0-9.]*/go 1.23/' cn-poe-utils/go/go.mod
+
+# Run tests FIRST — if cn-poe-utils has a breaking change, build stops here
+RUN echo "=== Running tests to verify cn-poe-utils compatibility ===" \
+    && go test ./translator/... -v -count=1 \
+    && go test ./pricer/... -v -count=1 \
+    && echo "=== All tests passed ==="
+
+# Build binary
 RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o pob-api .
 
 # ============================================================

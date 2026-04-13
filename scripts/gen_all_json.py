@@ -13,8 +13,15 @@ import os
 import sys
 
 
-DB_ROOT = os.path.join(os.path.dirname(__file__), "..", "cn-poe-utils", "data", "db")
-OUTPUT = os.path.join(os.path.dirname(__file__), "..", "translate_data", "all.json")
+# Paths can be overridden via env vars (used in Docker builds)
+DB_ROOT = os.environ.get(
+    "CN_POE_UTILS_DB",
+    os.path.join(os.path.dirname(__file__), "..", "cn-poe-utils", "data", "db"),
+)
+OUTPUT = os.environ.get(
+    "CN_POE_UTILS_OUT",
+    os.path.join(os.path.dirname(__file__), "..", "translate_data", "all.json"),
+)
 
 
 def read_json(path):
