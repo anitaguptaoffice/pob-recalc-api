@@ -12,3 +12,7 @@ cn-poe-utils/
 # Generated translation data
 translate_data/
 translator/all.json
+
+# Personal build data (keep README only)
+builds/*
+!builds/README.md
