@@ -97,6 +97,25 @@ echo "[patch-headless] Patched GetRuntimePath" >&2
 sed -i 's/^function MakeDir(path) end$/function MakeDir(path)\n\tos.execute("mkdir -p " .. path)\nend/' "$TARGET"
 echo "[patch-headless] Patched MakeDir" >&2
 
+# --- Patch 5: Merge split .zip.part* files into single .zip ---
+# New POB versions split large TimelessJewelData files (e.g. GloriousVanity.zip)
+# into .zip.part0, .zip.part1, ... for git-friendly storage.
+# The code uses NewFileSearch() (which is a stub in headless mode) to iterate parts.
+# Instead of implementing NewFileSearch, we simply concatenate the parts back into
+# a single .zip at patch time. The old io.open() path then works as-is.
+
+JEWEL_DIR="$(dirname "$TARGET")/Data/TimelessJewelData"
+if [ -d "$JEWEL_DIR" ]; then
+    for base in "$JEWEL_DIR"/*.zip.part0; do
+        [ -f "$base" ] || continue
+        zipname="${base%.part0}"
+        echo "[patch-headless] Merging split parts → $(basename "$zipname")" >&2
+        cat "$zipname".part* > "$zipname"
+        rm -f "$zipname".part*
+    done
+fi
+echo "[patch-headless] Patched TimelessJewelData split files" >&2
+
 # --- Verify patches ---
 ERRORS=0
 
