@@ -1,6 +1,6 @@
 import base64, zlib, re, requests
 
-with open("/data/workspace/pob-recalc-api/pob") as f:
+with open("tests/testdata/fixture.txt") as f:
     pob_code = f.read().strip()
 
 b64std = pob_code.replace('-', '+').replace('_', '/')

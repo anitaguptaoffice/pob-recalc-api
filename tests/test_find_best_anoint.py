@@ -6,7 +6,7 @@ import sys
 import time
 
 # Read POB code from file
-with open("/data/workspace/pob-recalc-api/pob", "r") as f:
+with open("tests/testdata/fixture.txt", "r") as f:
     pob_code = f.read().strip()
 
 payload = {

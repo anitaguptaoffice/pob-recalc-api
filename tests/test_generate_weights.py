@@ -8,7 +8,7 @@ import time
 API = "http://localhost:8080"
 
 # Read POB code
-with open("pob", "r") as f:
+with open("tests/testdata/fixture.txt", "r") as f:
     pob_code = f.read().strip()
 
 print("=" * 70)

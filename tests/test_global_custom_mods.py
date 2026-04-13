@@ -5,7 +5,7 @@ import base64
 import zlib
 
 # 读取 POB code
-with open("/data/workspace/pob-recalc-api/pob", "r") as f:
+with open("tests/testdata/fixture.txt", "r") as f:
     pob_code = f.read().strip()
 
 def decode_pob(pob_code):

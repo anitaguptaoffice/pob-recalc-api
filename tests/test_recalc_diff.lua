@@ -26,7 +26,7 @@ for i = 1, 20 do runCallback("OnFrame") end
 io.stderr:write("[test] HeadlessWrapper loaded.\n")
 
 -- Read pre-decoded XML
-local xmlFile = "/tmp/酋长火刀阵.xml"
+local xmlFile = "../tests/testdata/fixture.xml"
 local f = io.open(xmlFile, "r")
 if not f then error("cannot open " .. xmlFile) end
 local xmlText = f:read("*a")

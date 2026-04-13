@@ -1,7 +1,7 @@
 -- Test the actual generateRecalcXML function
 dofile("HeadlessWrapper.lua")
 
-local f = io.open("/data/workspace/pob-recalc-api/builds/酋长火刀阵.xml", "r")
+local f = io.open("../tests/testdata/fixture.xml", "r")
 local xmlText = f:read("*a")
 f:close()
 
@@ -52,10 +52,10 @@ if outXML then
     print("CombinedDPS: " .. tostring(checkDPS))
 
     -- Write output for comparison
-    local of = io.open("/data/workspace/pob-recalc-api/builds/酋长火刀阵_fixed_output.xml", "w")
+    local of = io.open("/tmp/fixture_output.xml", "w")
     of:write(outXML)
     of:close()
-    print("\nOutput written to 酋长火刀阵_fixed_output.xml")
+    print("\nOutput written to fixture_output.xml")
 else
     print("Compose error: " .. tostring(composeErr))
 end

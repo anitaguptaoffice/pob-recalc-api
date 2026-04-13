@@ -172,7 +172,7 @@ COPY --from=pob-source /pob/runtime/lua/ ./runtime/lua/
 # Hotfix: Patch HeadlessWrapper.lua to fix Inflate/Deflate, GetScriptPath,
 # GetRuntimePath, and MakeDir stubs that break Timeless Jewel data loading.
 # See docs/headless-wrapper-bugfix.md for details.
-COPY builds/patch-headless.sh /tmp/patch-headless.sh
+COPY scripts/patch-headless.sh /tmp/patch-headless.sh
 RUN cd /app/src && sh /tmp/patch-headless.sh HeadlessWrapper.lua && rm /tmp/patch-headless.sh
 # Optional: manifest.xml for POB version number in logs
 COPY --from=pob-source /pob/manifest.xml ./src/manifest.xml

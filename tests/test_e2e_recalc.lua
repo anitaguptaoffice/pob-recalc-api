@@ -2,7 +2,7 @@
 dofile("HeadlessWrapper.lua")
 
 -- Load the test build
-local f = io.open("/data/workspace/pob-recalc-api/builds/酋长火刀阵.xml", "r")
+local f = io.open("../tests/testdata/fixture.xml", "r")
 local xmlText = f:read("*a")
 f:close()
 

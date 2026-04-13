@@ -4,7 +4,7 @@ import json
 import urllib.request
 
 # Read POB code from file
-with open("/data/workspace/pob-recalc-api/pob", "r") as f:
+with open("tests/testdata/fixture.txt", "r") as f:
     pob_code = f.read().strip()
 
 # Test 1: 普通稀有头盔 (baseline，不带 custom mod)
